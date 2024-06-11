@@ -4,17 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
-public class LoginRestauranteGUI extends JPanel {
+public class LoginRestauranteGUI extends JFrame {
     private JTextField txtNomeRestaurante;
     private JPasswordField txtSenha;
     private MainFrame mainFrame;
-    private static final String ARQUIVO_DADOS = "restaurante/DadosRestaurante.txt";
 
     public LoginRestauranteGUI(MainFrame mainFrame) {
+        super("Login do Restaurante");
         this.mainFrame = mainFrame;
 
         // Criando componentes
@@ -26,21 +23,22 @@ public class LoginRestauranteGUI extends JPanel {
 
         JButton btnLogin = new JButton("Login");
         JButton btnCancelar = new JButton("Cancelar");
-        JButton btnCadastrar = new JButton("Cadastrar");
 
         // Configurando layout
-        JPanel panel = new JPanel(new GridLayout(4, 2, 5, 5));
+        JPanel panel = new JPanel(new GridLayout(3, 2, 5, 5));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Adiciona borda
         panel.add(lblNomeRestaurante);
         panel.add(txtNomeRestaurante);
         panel.add(lblSenha);
         panel.add(txtSenha);
         panel.add(btnCancelar);
         panel.add(btnLogin);
-        panel.add(new JLabel()); // Espaço em branco
-        panel.add(btnCadastrar);
 
-        setLayout(new BorderLayout());
-        add(panel, BorderLayout.CENTER);
+        getContentPane().add(panel);
+        pack();
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setVisible(true);
 
         // Evento de clique do botão de login
         btnLogin.addActionListener(new ActionListener() {
@@ -49,8 +47,9 @@ public class LoginRestauranteGUI extends JPanel {
                 String nomeRestaurante = txtNomeRestaurante.getText();
                 String senha = new String(txtSenha.getPassword());
 
-                if (verificarCredenciais(nomeRestaurante, senha)) {
-                    abrirTelaPrincipalRestaurante(nomeRestaurante);
+                if (nomeRestaurante.equals("restaurante123") && senha.equals("senha123")) {
+                    mainFrame.showRestauranteFeatures(nomeRestaurante);
+                    dispose(); // Fechar a janela de login do restaurante
                 } else {
                     JOptionPane.showMessageDialog(LoginRestauranteGUI.this, "Credenciais inválidas. Tente novamente.");
                 }
@@ -61,43 +60,8 @@ public class LoginRestauranteGUI extends JPanel {
         btnCancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0); // Fechar a aplicação
+                dispose(); // Fechar a janela de login do restaurante
             }
         });
-
-        // Evento de clique do botão de cadastrar
-        btnCadastrar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.showCadastro();
-            }
-        });
-    }
-
-    // Método para verificar as credenciais no arquivo
-    private boolean verificarCredenciais(String nome, String senha) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(ARQUIVO_DADOS))) {
-            String linha;
-            while ((linha = reader.readLine()) != null) {
-                String[] dados = linha.split(",");
-                if (dados.length > 1 && dados[0].equals(nome) && dados[1].equals(senha)) {
-                    return true;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    // Método para abrir a tela principal do restaurante
-    private void abrirTelaPrincipalRestaurante(String nomeRestaurante) {
-        // Implemente aqui a lógica para abrir a tela principal do restaurante
-        // Por exemplo:
-        // TelaPrincipalRestauranteGUI telaPrincipal = new TelaPrincipalRestauranteGUI(nomeRestaurante);
-        // telaPrincipal.setVisible(true);
-        // Lembre-se de criar a classe TelaPrincipalRestauranteGUI conforme necessário
-        JOptionPane.showMessageDialog(this, "Login bem-sucedido. Abrindo a tela principal...");
     }
 }
-

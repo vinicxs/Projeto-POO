@@ -1,1 +1,4 @@
 vini,123,vchella6@gmail.com,41988788018,18
+nicolas,123,aaaaaa@gmail.com,41965321478,19
+barbara,456,xyz@gmail.com,419987654321,18
+assaocna,123,email@gmail.com,41988788018,18

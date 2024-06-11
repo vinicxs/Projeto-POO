@@ -1,14 +1,12 @@
 package Cliente;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class CadastroClienteGUI extends JFrame {
     private JTextField txtNome;
@@ -17,8 +15,6 @@ public class CadastroClienteGUI extends JFrame {
     private JTextField txtEmail;
     private JTextField txtTelefone;
     private JTextField txtIdade;
-    private JButton btnCancelar;
-    private JButton btnConfirmar;
 
     private static final String PASTA_CLIENTE = "cliente/";
     private static final String ARQUIVO_CLIENTE = PASTA_CLIENTE + "clientes.txt";
@@ -38,14 +34,15 @@ public class CadastroClienteGUI extends JFrame {
         txtSenha = new JPasswordField(20);
         txtConfirmaSenha = new JPasswordField(20);
         txtEmail = new JTextField(20);
-        txtTelefone = new JTextField(15);
-        txtIdade = new JTextField(5);
+        txtTelefone = new JTextField(20);
+        txtIdade = new JTextField(20);
 
-        btnCancelar = new JButton("Cancelar");
-        btnConfirmar = new JButton("Confirmar");
+        JButton btnConfirmar = new JButton("Confirmar");
+        JButton btnCancelar = new JButton("Cancelar");
 
         // Configurando layout
         JPanel panel = new JPanel(new GridLayout(7, 2, 5, 5));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Adiciona borda
         panel.add(lblNome);
         panel.add(txtNome);
         panel.add(lblSenha);
@@ -61,124 +58,72 @@ public class CadastroClienteGUI extends JFrame {
         panel.add(btnCancelar);
         panel.add(btnConfirmar);
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        mainPanel.add(panel, BorderLayout.CENTER);
-
-        getContentPane().add(mainPanel);
-
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        getContentPane().add(panel);
         pack();
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
 
-        // Adicionando ações aos botões
+        // Evento de clique do botão de confirmar
         btnConfirmar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                confirmarCadastro();
+                String nome = txtNome.getText().trim();
+                String senha = new String(txtSenha.getPassword()).trim();
+                String confirmaSenha = new String(txtConfirmaSenha.getPassword()).trim();
+                String email = txtEmail.getText().trim();
+                String telefone = txtTelefone.getText().trim();
+                String idade = txtIdade.getText().trim();
+
+                if (!senha.equals(confirmaSenha)) {
+                    JOptionPane.showMessageDialog(CadastroClienteGUI.this, "As senhas não conferem. Tente novamente.");
+                    return;
+                }
+
+                if (!telefone.matches("\\d+")) {
+                    JOptionPane.showMessageDialog(CadastroClienteGUI.this, "Telefone deve conter apenas números.");
+                    return;
+                }
+
+                if (!idade.matches("\\d+")) {
+                    JOptionPane.showMessageDialog(CadastroClienteGUI.this, "Idade deve conter apenas números.");
+                    return;
+                }
+
+                // Confirmar os dados em uma nova tela
+                int resposta = JOptionPane.showConfirmDialog(CadastroClienteGUI.this, 
+                        "Nome: " + nome + "\nEmail: " + email + "\nTelefone: " + telefone + "\nIdade: " + idade, 
+                        "Confirmação de Cadastro", 
+                        JOptionPane.YES_NO_OPTION);
+
+                if (resposta == JOptionPane.YES_OPTION) {
+                    // Salvar os dados no arquivo
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_CLIENTE, true))) {
+                        writer.write(nome + "," + senha + "," + email + "," + telefone + "," + idade);
+                        writer.newLine();
+                        JOptionPane.showMessageDialog(CadastroClienteGUI.this, "Cadastro realizado com sucesso!");
+                        abrirTelaLoginCliente();
+                        dispose();
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(CadastroClienteGUI.this, "Erro ao salvar os dados: " + ex.getMessage());
+                    }
+                }
             }
         });
 
+        // Evento de clique do botão de cancelar
         btnCancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                dispose(); // Fechar a janela de cadastro do cliente
             }
         });
     }
 
-    // Método para confirmar o cadastro do cliente
-    private void confirmarCadastro() {
-        String nome = txtNome.getText().trim();
-        String senha = new String(txtSenha.getPassword()).trim();
-        String confirmaSenha = new String(txtConfirmaSenha.getPassword()).trim();
-        String email = txtEmail.getText().trim();
-        String telefone = txtTelefone.getText().trim();
-        String idadeStr = txtIdade.getText().trim();
-
-        if (nome.isEmpty() || senha.isEmpty() || confirmaSenha.isEmpty() || email.isEmpty() || telefone.isEmpty() || idadeStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Todos os campos devem ser preenchidos.");
-            return;
-        }
-
-        if (!senha.equals(confirmaSenha)) {
-            JOptionPane.showMessageDialog(this, "As senhas não coincidem.");
-            return;
-        }
-
-        if (!telefone.matches("\\d+")) {
-            JOptionPane.showMessageDialog(this, "O telefone deve conter apenas números.");
-            return;
-        }
-
-        if (!idadeStr.matches("\\d+")) {
-            JOptionPane.showMessageDialog(this, "A idade deve conter apenas números.");
-            return;
-        }
-
-        int idade = Integer.parseInt(idadeStr);
-
-        // Mostrar tela de confirmação
-        JFrame confirmacaoFrame = new JFrame("Confirmação de Dados");
-        confirmacaoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        JTextArea txtAreaConfirmacao = new JTextArea(10, 30);
-        txtAreaConfirmacao.setText("Nome: " + nome + "\n" +
-                                    "Email: " + email + "\n" +
-                                    "Telefone: " + telefone + "\n" +
-                                    "Idade: " + idade);
-        txtAreaConfirmacao.setEditable(false);
-
-        JButton btnConfirmarCadastro = new JButton("Confirmar");
-        JButton btnCancelarCadastro = new JButton("Cancelar");
-
-        btnConfirmarCadastro.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                salvarDadosCliente(nome, senha, email, telefone, idade);
-                confirmacaoFrame.dispose();
-            }
-        });
-
-        btnCancelarCadastro.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                confirmacaoFrame.dispose();
-            }
-        });
-
-        JPanel panelConfirmacao = new JPanel(new BorderLayout());
-        panelConfirmacao.setBorder(new EmptyBorder(10, 10, 10, 10));
-        panelConfirmacao.add(txtAreaConfirmacao, BorderLayout.CENTER);
-
-        JPanel panelBotoes = new JPanel(new FlowLayout());
-        panelBotoes.add(btnConfirmarCadastro);
-        panelBotoes.add(btnCancelarCadastro);
-
-        panelConfirmacao.add(panelBotoes, BorderLayout.SOUTH);
-
-        confirmacaoFrame.getContentPane().add(panelConfirmacao);
-        confirmacaoFrame.pack();
-        confirmacaoFrame.setLocationRelativeTo(this);
-        confirmacaoFrame.setVisible(true);
-    }
-
-    // Método para salvar os dados do cliente em um arquivo de texto
-    private void salvarDadosCliente(String nome, String senha, String email, String telefone, int idade) {
-        // Certificar que a pasta existe
-        File pasta = new File(PASTA_CLIENTE);
-        if (!pasta.exists()) {
-            pasta.mkdirs();
-        }
-
-        try (PrintWriter writer = new PrintWriter(new FileWriter(ARQUIVO_CLIENTE, true))) {
-            writer.println(nome + "," + senha + "," + email + "," + telefone + "," + idade);
-            JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
-            dispose();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao salvar os dados do cliente: " + e.getMessage());
-        }
+    private void abrirTelaLoginCliente() {
+        LoginClienteGUI loginClienteGUI = new LoginClienteGUI();
+        loginClienteGUI.setSize(400, 300); // Aumenta o tamanho da janela de login
+        loginClienteGUI.setVisible(true);
     }
 
     public static void main(String[] args) {

@@ -30,6 +30,7 @@ public class LoginClienteGUI extends JFrame {
 
         // Configurando layout
         JPanel panel = new JPanel(new GridLayout(3, 2, 5, 5));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Adiciona borda
         panel.add(lblEmail);
         panel.add(txtEmail);
         panel.add(lblSenha);
@@ -38,7 +39,7 @@ public class LoginClienteGUI extends JFrame {
         panel.add(btnLogin);
 
         getContentPane().add(panel);
-        pack();
+        setSize(400, 300); // Aumenta o tamanho da janela de login
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -90,9 +91,9 @@ public class LoginClienteGUI extends JFrame {
 
     // Método para abrir a tela principal do cliente
     private void abrirTelaPrincipalCliente() {
-        TelaPrincipalClienteGUI telaPrincipalCliente = new TelaPrincipalClienteGUI();
+        TelaPrincipalClienteGUI telaPrincipalCliente = new TelaPrincipalClienteGUI(this); // Passa a instância atual
         telaPrincipalCliente.setVisible(true);
-        dispose(); // Fechar a janela de login do cliente
+        setVisible(false); // Esconde a janela de login do cliente, mas não a fecha
     }
 
     public static void main(String[] args) {
