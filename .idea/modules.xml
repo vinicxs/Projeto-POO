@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PjBL.iml" filepath="$PROJECT_DIR$/PjBL.iml" />
+
+      <module fileurl="file://$PROJECT_DIR$/Projeto-POO-main/Projeto-POO-main.iml" filepath="$PROJECT_DIR$/Projeto-POO-main/Projeto-POO-main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Projeto-POO-vini.iml" filepath="$PROJECT_DIR$/Projeto-POO-vini.iml" />
+    <module fileurl="file://$PROJECT_DIR$/PjBL.iml" filepath="$PROJECT_DIR$/PjBL.iml" />
+
     </modules>
   </component>
 </project>
