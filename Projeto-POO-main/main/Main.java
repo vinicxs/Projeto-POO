@@ -1,99 +1,61 @@
 package main;
 
-import perfil.UserInputPage;
-import restaurante.CadastroRestauranteGUI;
-import perfil.ProfilePage;
-import perfil.User;
-
 import javax.swing.*;
+import perfil.UserInputPage;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 
 public class Main extends JFrame {
-    private JButton btnRestaurantRegistration;
-    private JButton btnClientRegistration;
-    private JButton btnRestaurantLogin;
-    private JButton btnClientLogin;
-    private String restauranteLogado;
+    private JButton btnCadastroCliente;
+    private JButton btnBuscaRestaurantes;
+    private JButton btnProfile;
 
     public Main() {
-        setTitle("Main Interface");
-        setSize(400, 300);
+        setTitle("Main");
+        setSize(300, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(2, 2, 10, 10));
+        setLayout(new GridLayout(3, 1, 10, 10));
 
-        btnRestaurantRegistration = new JButton("Registro de Restaurante ");
-        btnRestaurantRegistration.addActionListener(new ActionListener() {
+        btnCadastroCliente = new JButton("Cadastrar Cliente");
+        btnBuscaRestaurantes = new JButton("Buscar Restaurantes");
+        btnProfile = new JButton("Perfil");
+
+        btnCadastroCliente.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                openRestaurantRegistration();
+                new UserInputPage();
             }
         });
-        add(btnRestaurantRegistration);
 
-        btnClientRegistration = new JButton("Registro de Cliente");
-        btnClientRegistration.addActionListener(new ActionListener() {
+        btnBuscaRestaurantes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                openUserInputPage();
+                new BuscaRestaurantesGUI();
             }
         });
-        add(btnClientRegistration);
 
-        btnRestaurantLogin = new JButton("Login de Restaurante");
-        btnRestaurantLogin.addActionListener(new ActionListener() {
+        btnProfile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                openLoginWindow("Restaurant");
+                User user = new User("João Silva", "joao.silva@example.com", "Cliente");
+                ProfilePage.showProfilePage(user);
             }
         });
-        add(btnRestaurantLogin);
 
-        btnClientLogin = new JButton("Login de Cliente");
-        btnClientLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openLoginWindow("Client");
-            }
-        });
-        add(btnClientLogin);
-    }
+        add(btnCadastroCliente);
+        add(btnBuscaRestaurantes);
+        add(btnProfile);
 
-    private void openRestaurantRegistration() {
-        CadastroRestauranteGUI registration = new CadastroRestauranteGUI();
-        registration.setVisible(true);
-    }
-
-    private void openUserInputPage() {
-        UserInputPage userInputPage = new UserInputPage();
-        userInputPage.setVisible(true);
-    }
-
-    private void openLoginWindow(String userType) {
-        // Implementar a lógica de abrir a janela de login para diferentes tipos de usuários
-    }
-
-    public static void showProfilePage(User user) {
-        ProfilePage profilePage = new ProfilePage(user);
-        profilePage.setVisible(true);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    Main frame = new Main();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                new Main();
             }
         });
     }
 }
-

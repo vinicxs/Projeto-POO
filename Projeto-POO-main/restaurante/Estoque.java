@@ -1,8 +1,8 @@
-import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.*;
 
 public class Estoque {
 
@@ -77,11 +77,23 @@ public class Estoque {
         panel.add(excluirButton);
         panel.add(pesquisarButton);
 
+        // Adicionando uma JList para mostrar os pratos
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        JList<String> pratosList = new JList<>(listModel);
+        JScrollPane scrollPane = new JScrollPane(pratosList);
+        scrollPane.setPreferredSize(new Dimension(300, 150));
+        panel.add(scrollPane);
+
+        // Atualizar a lista de pratos na interface
+        pratos.forEach(listModel::addElement);
+
         adicionarButton.addActionListener(e -> {
             String prato = pratoField.getText();
             if (!prato.isEmpty()) {
                 adicionarPrato(prato);
+                listModel.addElement(prato);
                 JOptionPane.showMessageDialog(estoqueFrame, "Prato adicionado com sucesso.");
+                pratoField.setText("");
             }
         });
 
@@ -89,7 +101,9 @@ public class Estoque {
             String prato = pratoField.getText();
             if (!prato.isEmpty() && pratos.contains(prato)) {
                 excluirPrato(prato);
+                listModel.removeElement(prato);
                 JOptionPane.showMessageDialog(estoqueFrame, "Prato excluído com sucesso.");
+                pratoField.setText("");
             } else {
                 JOptionPane.showMessageDialog(estoqueFrame, "Erro: Prato não encontrado.");
             }
@@ -109,7 +123,7 @@ public class Estoque {
 
         voltarButton.addActionListener(e -> {
             estoqueFrame.dispose(); // Fechar a tela de Estoque
-            mainFrame.setVisible(true); // Mostrar a tela de Funcionalidades
+            mainFrame.setVisible(true); // Mostrar a tela principal
         });
 
         estoqueFrame.add(panel);

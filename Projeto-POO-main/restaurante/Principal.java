@@ -1,5 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class Principal {
 
@@ -18,10 +18,13 @@ public class Principal {
 
         JButton loginButton = new JButton("Login");
         JButton cadastroButton = new JButton("Cadastro de Restaurante");
+        JButton estoqueButton = new JButton("Gestão de Estoque");  // Adicionando botão para estoque
 
         panel.add(loginButton, gbc);
         gbc.gridy++;
         panel.add(cadastroButton, gbc);
+        gbc.gridy++;
+        panel.add(estoqueButton, gbc);  // Adicionando botão para estoque
 
         frame.add(panel);
 
@@ -32,6 +35,12 @@ public class Principal {
 
         cadastroButton.addActionListener(e -> {
             InterfaceRest.criarCadastroRestauranteGUI();
+            frame.dispose();
+        });
+
+        estoqueButton.addActionListener(e -> {
+            Estoque estoque = new Estoque(frame);
+            estoque.exibirInterface();
             frame.dispose();
         });
 
