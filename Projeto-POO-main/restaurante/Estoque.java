@@ -16,7 +16,7 @@ public class Estoque {
 
     private List<String> carregarPratos() {
         List<String> pratos = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("PratosRest.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("restaurante/PratosRest.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 pratos.add(line);

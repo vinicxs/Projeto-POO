@@ -1,7 +1,6 @@
 package perfil;
 
 public class RestaurantHandler extends AbstractUserHandler {
-    @Override
     public void showUserDetails(User user) {
         if (user instanceof Restaurant) {
             Restaurant restaurant = (Restaurant) user;
